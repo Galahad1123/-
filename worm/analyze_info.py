@@ -1,13 +1,21 @@
-# -*- coding : gbk -*-
-# coding:unicode_escape
 from pyecharts.charts import *
 from pyecharts import options as opts
 import numpy as np
-import random
 from pyecharts.globals import CurrentConfig, NotebookType
+from pyecharts.commons.utils import JsCode
 
 CurrentConfig.NOTEBOOK_TYPE = NotebookType.JUPYTER_LAB
 CurrentConfig.ONLINE_HOST
+color_js = """
+            new echarts.graphic.LinearGradient(
+                                0, 
+                                1, 
+                                0, 
+                                0,
+                                [{offset: 0, color: '#008B8B'}, 
+                                 {offset: 1, color: '#FF6347'}], 
+                                false)
+           """
 
 # 用一维数组存储数据
 coins = np.zeros(8)  # 总投币数 0~2000，2000~5000，5000~10000，10000~20000，20000~50000，50000~100000，100000~500000，>500000
@@ -15,7 +23,7 @@ thumbs = np.zeros(8)  # 总点赞数 0~2000，2000~5000，5000~10000，10000~200
 viewing = np.zeros(7)  # 总播放数 0~10000，10000~100000，100000~1000000，1000000~2000000，
 # 2000000~5000000，5000000~10000000，>10000000
 danMu = np.zeros(6)  # 总弹幕量 0~1000，1000~10000，10000~100000，100000~500000，500000~1000000，>1000000
-scores = np.zeros(8)  # 总评分 >=9.9，9.9~9.5，9.5~9.0，9.0~8.0，8.0~7.0，7.0~6.0，6.0~5.0，<5.0
+scores = np.zeros(8)  # 总评分 >=9.8，9.8~9.5，9.5~9.0，9.0~8.0，8.0~7.0，7.0~6.0，6.0~5.0，<5.0
 
 # 标签分类 25个
 tag_list = ['短片', '喜剧', '奇幻', '冒险', '动作', '动画', '家庭', '灾难', '剧情', '犯罪', '悬疑', '惊悚', '战争',
@@ -155,6 +163,18 @@ def bar_with_multiple_axis(x_data, y_data_1, y_data_2):
     return bar
 
 
+def bar_with_linear_gradient_color(x_data, y_data):
+    bar = Bar(init_opts=opts.InitOpts(theme='light',
+                                      width='1000px',
+                                      height='600px'))
+    bar.add_xaxis(x_data)
+    bar.add_yaxis('score', y_data,
+                  # 使用JsCode执行渐变色代码
+                  itemstyle_opts=opts.ItemStyleOpts(color=JsCode(color_js)))
+
+    return bar
+
+
 if __name__ == '__main__':
     # 获取数据
     src_file = open('1000-Data.csv', 'r', encoding='gb18030')
@@ -169,19 +189,24 @@ if __name__ == '__main__':
     # print(coins)
     # print("thumbs:")
     # print(thumbs)
-    chart = bar_with_multiple_axis(
-        ['0~2000', '2000~5000', '5000~10000', '10000~20000', '20000~50000', '50000~100000', '100000~500000', '>500000'],
-        list(coins),
-        list(thumbs)
-    )
-    chart.render('bar.html')  # 画点赞-投币双Y图
+    # chart = bar_with_multiple_axis(
+    #     ['0~2000', '2000~5000', '5000~10000', '10000~20000', '20000~50000', '50000~100000', '100000~500000', '>500000'],
+    #     list(coins),
+    #     list(thumbs)
+    # )
+    # chart.render('bar.html')  # 画点赞-投币双Y图
 
-    # print('viewing:')
-    # print(viewing)
-    # print('danMu:')
-    # print(danMu)
+    print('viewing:')
+    print(viewing)
+    print('danMu:')
+    print(danMu)
+    
     # print('scores:')
     # print(scores)
+    # chart2 = bar_with_linear_gradient_color(
+    #     ['<5.0', '5.0~6.0', '6.0~7.0', '7.0~8.0', '8.0~9.0', '9.0~9.5', '9.5~9.8', '>=9.8'], list(scores))
+    # chart2.render('bar2.html')  # 评分条形图
+
     # print('coin-thumb:')
     # print(coin_thumb)
     # print('view-score:')
