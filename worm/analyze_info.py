@@ -1,6 +1,13 @@
 # -*- coding : gbk -*-
 # coding:unicode_escape
+from pyecharts.charts import *
+from pyecharts import options as opts
 import numpy as np
+import random
+from pyecharts.globals import CurrentConfig, NotebookType
+
+CurrentConfig.NOTEBOOK_TYPE = NotebookType.JUPYTER_LAB
+CurrentConfig.ONLINE_HOST
 
 # 用一维数组存储数据
 coins = np.zeros(8)  # 总投币数 0~2000，2000~5000，5000~10000，10000~20000，20000~50000，50000~100000，100000~500000，>500000
@@ -14,7 +21,6 @@ scores = np.zeros(8)  # 总评分 >=9.9，9.9~9.5，9.5~9.0，9.0~8.0，8.0~7.0�
 tag_list = ['短片', '喜剧', '奇幻', '冒险', '动作', '动画', '家庭', '灾难', '剧情', '犯罪', '悬疑', '惊悚', '战争',
             '历史', '传记', '漫画改', '小说改', '爱情', '科幻', '恐怖', '歌舞', '都市', '刑侦', '励志', '纪实']
 
-
 # 二维数组
 # 投币、评分、个数
 coin_thumb = np.zeros((8, 8))
@@ -25,6 +31,9 @@ danMu_thumb = np.zeros((6, 8))
 
 
 def data_analyze(aList):
+    """
+    解析源文件信息
+    """
     view = int(aList[1])
     danmu = int(aList[2])
     coin = int(aList[4])
@@ -129,10 +138,26 @@ def data_analyze(aList):
     scores[score_index] += 1
 
 
+def bar_with_multiple_axis(x_data, y_data_1, y_data_2):
+    """
+    画点赞-投币双y轴图
+    """
+    bar = Bar(init_opts=opts.InitOpts(theme='light',
+                                      width='1000px',
+                                      height='600px'))
+    bar.add_xaxis(x_data)
+    # 添加一个Y轴
+    bar.extend_axis(yaxis=opts.AxisOpts())
+    # 分别指定使用的Y轴
+    bar.add_yaxis('TouBi', y_data_1, yaxis_index=0)
+    bar.add_yaxis('DianZan', y_data_2, yaxis_index=1)
+    bar.load_javascript()
+    return bar
+
+
 if __name__ == '__main__':
     # 获取数据
     src_file = open('1000-Data.csv', 'r', encoding='gb18030')
-
     src_list = src_file.readline()
     src_list = src_file.readline()
     while src_list != '':
@@ -140,20 +165,26 @@ if __name__ == '__main__':
         data_analyze(info_list)
         src_list = src_file.readline()
 
-    print("coins:")
-    print(coins)
-    print("thumbs:")
-    print(thumbs)
-    print('viewing:')
-    print(viewing)
-    print('danMu:')
-    print(danMu)
-    print('scores:')
-    print(scores)
-    print('coin-thumb:')
-    print(coin_thumb)
-    print('view-score:')
-    print(view_score)
-    print('danmu-thumb:')
-    print(danMu_thumb)
+    # print("coins:")
+    # print(coins)
+    # print("thumbs:")
+    # print(thumbs)
+    chart = bar_with_multiple_axis(
+        ['0~2000', '2000~5000', '5000~10000', '10000~20000', '20000~50000', '50000~100000', '100000~500000', '>500000'],
+        list(coins),
+        list(thumbs)
+    )
+    chart.render('bar.html')  # 画点赞-投币双Y图
 
+    # print('viewing:')
+    # print(viewing)
+    # print('danMu:')
+    # print(danMu)
+    # print('scores:')
+    # print(scores)
+    # print('coin-thumb:')
+    # print(coin_thumb)
+    # print('view-score:')
+    # print(view_score)
+    # print('danmu-thumb:')
+    # print(danMu_thumb)
