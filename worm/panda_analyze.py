@@ -1,5 +1,10 @@
+import matplotlib.pyplot as plt
+import numpy
 import pandas as pd
 import numpy as np
+import wordcloud
+from PIL import Image
+from wordcloud import WordCloud
 
 all_tags = []
 
@@ -59,9 +64,30 @@ if __name__ == '__main__':
         except TypeError:
             print("line" + str(i) + ' occurred a TypeError')
 
-    with open('tag.txt', 'w') as f:
-        for tag in all_tags:
-            f.write(tag[0])
-            f.write(',')
-            f.write(str(round(tag[2]/tag[1])))
-            f.write('\n')
+    # with open('tag.txt', 'w') as f:
+    #     for tag in all_tags:
+    #         f.write(tag[0])
+    #         f.write(',')
+    #         f.write(str(round(tag[2]/tag[1])))
+    #         f.write('\n')
+
+    l = {}
+    for tag in all_tags:
+        l[tag[0]] = round(tag[2]/tag[1])
+
+    # print(l)
+    # mask = numpy.array(Image.open("background.png"))
+    wc = wordcloud.WordCloud(
+        font_path='msyh.ttc',
+        background_color='white',
+        max_font_size=150
+    )
+
+    wc.generate_from_frequencies(l)
+    # wc.recolor(color_func=wordcloud.ImageColorGenerator(mask))
+    plt.figure('词云')
+    plt.subplots_adjust(top=0.99, bottom=0.01, right=0.99, left=0.01,
+                        hspace=0, wspace=0)
+    plt.imshow(wc, cmap=plt.cm.gray, interpolation='bilinear')
+    plt.axis('off')
+    plt.show()
