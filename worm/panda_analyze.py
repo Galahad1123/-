@@ -80,7 +80,7 @@ if __name__ == '__main__':
     wc = wordcloud.WordCloud(
         font_path='msyh.ttc',
         background_color='white',
-        max_font_size=150
+        max_font_size=120
     )
 
     wc.generate_from_frequencies(l)

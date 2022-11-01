@@ -3,6 +3,7 @@ from pyecharts import options as opts
 import numpy as np
 from pyecharts.globals import CurrentConfig, NotebookType
 from pyecharts.commons.utils import JsCode
+import matplotlib.pyplot as plt
 
 CurrentConfig.NOTEBOOK_TYPE = NotebookType.JUPYTER_LAB
 CurrentConfig.ONLINE_HOST
@@ -175,6 +176,38 @@ def bar_with_linear_gradient_color(x_data, y_data):
     return bar
 
 
+def nested_pie(data_1, data_2):
+    plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 显示中文标签,处理中文乱码问题
+    plt.rcParams['axes.unicode_minus'] = False  # 坐标轴负号的处理
+    plt.axes(aspect='equal')  # 将横、纵坐标轴标准化处理，确保饼图是一个正圆，否则为椭圆
+    data_1_labels = ['0~1w', '1w~10w', '10w~100w', '100w~200w',
+                     '200w~500w', '500w~1kw', '>1kw']
+    data_2_labels = ['0~1k', '1k~1w', '1w~10w', '10w~50w', '50w~100w', '>100w']
+    explode = [0, 0, 0, 0, 0, 0, 0.1]
+
+    outer_colors = list(np.arange(3)*7)
+    inner_colors = list(np.arange(3)*6)
+    plt.pie(
+        x=data_1,  # 绘图数据
+        explode=explode,  # 指定饼图某些部分的突出显示，即呈现爆炸式
+        labels=data_1_labels,  # 添加标签
+        autopct='%0.3f%%',
+        pctdistance=0.8,  # 设置数值与圆心的距离
+        labeldistance=1,  # 设置标签与圆心的距离
+        radius=1.2,  # 设置饼图的半径
+        counterclock=False,  # 是否逆时针，这里设置为顺时针方向
+        wedgeprops={'linewidth': 1.5, 'edgecolor': 'green', 'width': 0.4},  # 设置饼图内外边界的属性值
+        textprops={'fontsize': 10, 'color': 'royalblue'},  # 设置文本标签的属性值
+    )
+    plt.pie(
+        x=data_2, labels=data_2_labels, pctdistance=0.5, labeldistance=0.7, radius=0.8,
+        counterclock=False, wedgeprops={'linewidth': 0.5, 'edgecolor': 'green', 'width': 0.3},
+        textprops={'fontsize': 6, 'color': 'orange'}, autopct='%0.3f%%'
+    )
+    plt.title('viewing and danmu')
+    return plt
+
+
 if __name__ == '__main__':
     # 获取数据
     src_file = open('1000-Data.csv', 'r', encoding='gb18030')
@@ -196,20 +229,26 @@ if __name__ == '__main__':
     # )
     # chart.render('bar.html')  # 画点赞-投币双Y图
 
-    print('viewing:')
-    print(viewing)
-    print('danMu:')
-    print(danMu)
-    
+    # sum = 1001
+    # print('viewing:')
+    # viewing = viewing / sum
+    # print(viewing)
+    # print('danMu:')
+    # danMu = danMu / sum
+    # print(danMu)
+    # fig = nested_pie(list(viewing), list(danMu))
+    # fig.savefig('viewing_danmu.png')
+    # fig.show()  # 播放量-弹幕嵌套饼图
+
     # print('scores:')
     # print(scores)
     # chart2 = bar_with_linear_gradient_color(
     #     ['<5.0', '5.0~6.0', '6.0~7.0', '7.0~8.0', '8.0~9.0', '9.0~9.5', '9.5~9.8', '>=9.8'], list(scores))
     # chart2.render('bar2.html')  # 评分条形图
 
-    # print('coin-thumb:')
-    # print(coin_thumb)
-    # print('view-score:')
-    # print(view_score)
-    # print('danmu-thumb:')
-    # print(danMu_thumb)
+    print('coin-thumb:')
+    print(coin_thumb)
+    print('view-score:')
+    print(view_score)
+    print('danmu-thumb:')
+    print(danMu_thumb)
