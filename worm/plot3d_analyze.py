@@ -1,3 +1,5 @@
+import csv
+
 from pyecharts.charts import *
 from pyecharts import options as opts
 import numpy as np
@@ -42,7 +44,10 @@ def create_3d_figure(x_y, x_label, y_label, title):
 
 def data_analyze(alist):
     view = int(alist[1])
-    danmu = int(alist[2])
+    try:
+        danmu = int(alist[2])
+    except ValueError:
+        print(alist)
     coin = int(alist[4])
     thumb = int(alist[5])
     try:
@@ -70,13 +75,22 @@ def data_analyze(alist):
 
 if __name__ == '__main__':
     # 获取数据
-    src_file = open('1000-Data.csv', 'r', encoding='gb18030')
-    src_list = src_file.readline()
-    src_list = src_file.readline()
-    while src_list != '':
-        info_list = src_list.split(',')
-        data_analyze(info_list)
-        src_list = src_file.readline()
+    src_file = open('1000-Data2.csv', 'r', encoding='utf-8-sig')
+    reader = csv.reader(src_file)
+    src_list = next(reader)
+    src_list = next(reader)
+    while True:
+        try:
+            data_analyze(src_list)
+        except (ValueError, UnboundLocalError):
+            pass
+        try:
+            src_list = next(reader)
+        except StopIteration:
+            break
+        # info_list = src_list.split(',')
+        # data_analyze(info_list)
+        # src_list = src_file.readline()
 
     # plt = create_3d_figure(coin_thumb, 'num of coins(x10^2)', 'num of thumbs(x10^2)', 'coin-thumb')
     # plt.show()

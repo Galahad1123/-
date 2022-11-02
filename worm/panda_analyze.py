@@ -1,3 +1,5 @@
+import csv
+
 import matplotlib.pyplot as plt
 import numpy
 import pandas as pd
@@ -54,18 +56,36 @@ def analyze_tag(tag, thumb):
 
 
 if __name__ == '__main__':
-    src_datas = pd.read_csv('1000-Data.csv', encoding='gb18030')
-    # print(src_datas)
-    tag_col = src_datas['标签']
-    thumb_col = src_datas['点赞数量']
-    tag_data = list(tag_col)
-    thumb_data = list(thumb_col)
+    # # 适用于 1000-Data.csv
+    # src_datas = pd.read_csv('1000-Data.csv', encoding='gb18030')
+    # # print(src_datas)
+    # tag_col = src_datas['标签']
+    # thumb_col = src_datas['点赞数量']
+    # tag_data = list(tag_col)
+    # thumb_data = list(thumb_col)
+
+    # 适用于 1000-Data2.csv
+    src_file = open('1000-Data2.csv', 'r', encoding='utf-8-sig')
+    reader = csv.reader(src_file)
+    src_list = next(reader)
+    src_list = next(reader)
+    tag_data = []
+    thumb_data = []
+    while True:
+        tag_data.append(src_list[6])
+        thumb_data.append(src_list[5])
+        try:
+            src_list = next(reader)
+        except StopIteration:
+            break
+    # print(tag_data)
+    # print(thumb_data)
 
     for i in range(len(tag_data)):
         try:
             analyze_tag(tag_data[i], thumb_data[i])
-        except TypeError:
-            print('a type error')
+        except (TypeError, ValueError):
+            print('an error')
 
     l = {}
     for tag in all_tags:

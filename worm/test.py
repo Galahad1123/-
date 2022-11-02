@@ -1,5 +1,7 @@
 # coding=utf-8
 import numpy as np
+import pandas as pd
+import pandas.errors
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 from numpy import arange, meshgrid, sqrt, sin
@@ -42,8 +44,23 @@ from numpy import arange, meshgrid, sqrt, sin
 # print(cell_11)
 # cell_11 = sheet1.cell(2, 2).value
 # print(cell_11)
-import csv
+# import csv
+#
+# src_file = open('1000-Data2.csv', 'r', encoding='utf-8-sig')
+# reader = csv.reader(src_file)
+# src_list = next(reader)
+# while True:
+#     print(src_list)
+#     try:
+#         src_list = next(reader)
+#     except StopIteration:
+#         break
+for i in ('gbk', 'utf-8', 'gb18030', 'ansi'):
+    try:
+        data = pd.read_csv('1000-Data2.csv', encoding=i)
+        print(i + 'decode success')
+    except UnicodeDecodeError:
+        print(i + 'decode fail')
 
-src_file = open('1000-Data2.csv', encoding='utf-8-sig')
-reader = csv.reader(src_file)
-print(next(reader))
+# src_datas = pd.read_csv('1000-Data2.csv', encoding='gb18030', error_bad_lines=False)
+# print(src_datas)
