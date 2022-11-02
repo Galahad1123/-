@@ -95,8 +95,8 @@ if __name__ == '__main__':
     # mask = numpy.array(Image.open("background.png"))
     wc = wordcloud.WordCloud(
         font_path='msyh.ttc',
-        background_color='white',
-        max_font_size=120
+        background_color='white'
+        # ,max_font_size=120
     )
 
     wc.generate_from_frequencies(l)
@@ -106,5 +106,5 @@ if __name__ == '__main__':
                         hspace=0, wspace=0)
     plt.imshow(wc, cmap=plt.cm.gray, interpolation='bilinear')
     plt.axis('off')
-    plt.savefig('ciyun')
+    plt.savefig('pictures/ciyun')
     plt.show()
