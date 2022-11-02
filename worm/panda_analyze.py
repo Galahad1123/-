@@ -9,6 +9,9 @@ from wordcloud import WordCloud
 all_tags = []
 
 
+# 1000-Data gb18030
+# 1000-Data2 utf-8-sig
+
 def find_tag(tag):
     if len(all_tags) == 0:
         return -1
@@ -51,7 +54,7 @@ def analyze_tag(tag, thumb):
 
 
 if __name__ == '__main__':
-    src_datas = pd.read_csv('1000-Data.csv', encoding='GB18030')
+    src_datas = pd.read_csv('1000-Data.csv', encoding='gb18030')
     # print(src_datas)
     tag_col = src_datas['标签']
     thumb_col = src_datas['点赞数量']
@@ -62,18 +65,11 @@ if __name__ == '__main__':
         try:
             analyze_tag(tag_data[i], thumb_data[i])
         except TypeError:
-            print("line" + str(i) + ' occurred a TypeError')
-
-    # with open('tag.txt', 'w') as f:
-    #     for tag in all_tags:
-    #         f.write(tag[0])
-    #         f.write(',')
-    #         f.write(str(round(tag[2]/tag[1])))
-    #         f.write('\n')
+            print('a type error')
 
     l = {}
     for tag in all_tags:
-        l[tag[0]] = round(tag[2]/tag[1])
+        l[tag[0]] = round(tag[2] / tag[1])
 
     # print(l)
     # mask = numpy.array(Image.open("background.png"))
@@ -90,4 +86,5 @@ if __name__ == '__main__':
                         hspace=0, wspace=0)
     plt.imshow(wc, cmap=plt.cm.gray, interpolation='bilinear')
     plt.axis('off')
+    plt.savefig('ciyun')
     plt.show()

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Awesome-pyecharts</title>
+            <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+
+</head>
+<body>
+    <div id="b805b428fe30475ebad63ae4543490c5" class="chart-container" style="width:1000px; height:600px;"></div>
+    <script>
+        var chart_b805b428fe30475ebad63ae4543490c5 = echarts.init(
+            document.getElementById('b805b428fe30475ebad63ae4543490c5'), 'light', {renderer: 'canvas'});
+        var option_b805b428fe30475ebad63ae4543490c5 = {
+    "animation": true,
+    "animationThreshold": 2000,
+    "animationDuration": 1000,
+    "animationEasing": "cubicOut",
+    "animationDelay": 0,
+    "animationDurationUpdate": 300,
+    "animationEasingUpdate": "cubicOut",
+    "animationDelayUpdate": 0,
+    "series": [
+        {
+            "type": "bar",
+            "name": "score",
+            "legendHoverLink": true,
+            "data": [
+                789.0,
+                5.0,
+                8.0,
+                17.0,
+                35.0,
+                52.0,
+                78.0,
+                56.0
+            ],
+            "showBackground": false,
+            "barMinHeight": 0,
+            "barCategoryGap": "20%",
+            "barGap": "30%",
+            "large": false,
+            "largeThreshold": 400,
+            "seriesLayoutBy": "column",
+            "datasetIndex": 0,
+            "clip": true,
+            "zlevel": 0,
+            "z": 2,
+            "label": {
+                "show": true,
+                "position": "top",
+                "margin": 8
+            },
+            "itemStyle": {
+                "color":             new echarts.graphic.LinearGradient(                                0,                                 1,                                 0,                                 0,                                [{offset: 0, color: '#008B8B'},                                  {offset: 1, color: '#FF6347'}],                                 false)           
+            }
+        }
+    ],
+    "legend": [
+        {
+            "data": [
+                "score"
+            ],
+            "selected": {
+                "score": true
+            }
+        }
+    ],
+    "tooltip": {
+        "show": true,
+        "trigger": "item",
+        "triggerOn": "mousemove|click",
+        "axisPointer": {
+            "type": "line"
+        },
+        "showContent": true,
+        "alwaysShowContent": false,
+        "showDelay": 0,
+        "hideDelay": 100,
+        "textStyle": {
+            "fontSize": 14
+        },
+        "borderWidth": 0,
+        "padding": 5
+    },
+    "xAxis": [
+        {
+            "show": true,
+            "scale": false,
+            "nameLocation": "end",
+            "nameGap": 15,
+            "gridIndex": 0,
+            "inverse": false,
+            "offset": 0,
+            "splitNumber": 5,
+            "minInterval": 0,
+            "splitLine": {
+                "show": false,
+                "lineStyle": {
+                    "show": true,
+                    "width": 1,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid"
+                }
+            },
+            "data": [
+                "<5.0",
+                "5.0~6.0",
+                "6.0~7.0",
+                "7.0~8.0",
+                "8.0~9.0",
+                "9.0~9.5",
+                "9.5~9.8",
+                ">=9.8"
+            ]
+        }
+    ],
+    "yAxis": [
+        {
+            "show": true,
+            "scale": false,
+            "nameLocation": "end",
+            "nameGap": 15,
+            "gridIndex": 0,
+            "inverse": false,
+            "offset": 0,
+            "splitNumber": 5,
+            "minInterval": 0,
+            "splitLine": {
+                "show": false,
+                "lineStyle": {
+                    "show": true,
+                    "width": 1,
+                    "opacity": 1,
+                    "curveness": 0,
+                    "type": "solid"
+                }
+            }
+        }
+    ]
+};
+        chart_b805b428fe30475ebad63ae4543490c5.setOption(option_b805b428fe30475ebad63ae4543490c5);
+    </script>
+</body>
+</html>
