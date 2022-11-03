@@ -4,7 +4,6 @@ import numpy as np
 from pyecharts.globals import CurrentConfig, NotebookType
 from pyecharts.commons.utils import JsCode
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 CurrentConfig.NOTEBOOK_TYPE = NotebookType.JUPYTER_LAB
 CurrentConfig.ONLINE_HOST
@@ -24,20 +23,18 @@ coins = np.zeros(8)  # 总投币数 0~2000，2000~5000，5000~10000，10000~2000
 thumbs = np.zeros(8)  # 总点赞数 0~2000，2000~5000，5000~10000，10000~20000，20000~50000，50000~100000，100000~500000，>500000
 viewing = np.zeros(7)  # 总播放数 0~10000，10000~100000，100000~1000000，1000000~2000000，
 # 2000000~5000000，5000000~10000000，>10000000
-danMu = np.zeros(6)  # 总弹幕量 0~1000，1000~10000，10000~100000，100000~500000，500000~1000000，>1000000
+danMu = np.zeros(5)  # 总弹幕量 0~1000，1000~10000，10000~100000，100000~500000，>500000
 scores = np.zeros(8)  # 总评分 >=9.8，9.8~9.5，9.5~9.0，9.0~8.0，8.0~7.0，7.0~6.0，6.0~5.0，<5.0
 
-# 标签分类 25个
-tag_list = ['短片', '喜剧', '奇幻', '冒险', '动作', '动画', '家庭', '灾难', '剧情', '犯罪', '悬疑', '惊悚', '战争',
-            '历史', '传记', '漫画改', '小说改', '爱情', '科幻', '恐怖', '歌舞', '都市', '刑侦', '励志', '纪实']
-
-sum = 1001  # 电影总数
+sum = 0  # 电影总数
 
 
 def data_analyze(aList):
     """
     解析源文件信息
     """
+    global sum
+    sum += 1
     try:
         view = int(aList[1])
     except ValueError:
@@ -57,7 +54,7 @@ def data_analyze(aList):
     try:
         score = float(aList[7])
     except ValueError:
-        score = 0.0
+        score = -1
 
     # 分类播放量
     if view < 10000:
@@ -84,10 +81,8 @@ def data_analyze(aList):
         danmu_index = 2
     elif danmu < 500000:
         danmu_index = 3
-    elif danmu < 1000000:
-        danmu_index = 4
     else:
-        danmu_index = 5
+        danmu_index = 4
 
     # 分类投币
     if coin < 2000:
@@ -126,28 +121,30 @@ def data_analyze(aList):
         thumb_index = 7
 
     # 分类评分
-    if score < 5.0:
-        score_index = 0
-    elif score < 6.0:
-        score_index = 1
-    elif score < 7.0:
-        score_index = 2
-    elif score < 8.0:
-        score_index = 3
-    elif score < 9.0:
-        score_index = 4
-    elif score < 9.5:
-        score_index = 5
-    elif score < 9.8:
-        score_index = 6
-    else:
-        score_index = 7
+    if score != -1:
+        if score < 5.0:
+            score_index = 0
+        elif score < 6.0:
+            score_index = 1
+        elif score < 7.0:
+            score_index = 2
+        elif score < 8.0:
+            score_index = 3
+        elif score < 9.0:
+            score_index = 4
+        elif score < 9.5:
+            score_index = 5
+        elif score < 9.8:
+            score_index = 6
+        else:
+            score_index = 7
 
     coins[coin_index] += 1
     thumbs[thumb_index] += 1
     viewing[view_index] += 1
     danMu[danmu_index] += 1
-    scores[score_index] += 1
+    if score != -1:
+        scores[score_index] += 1
 
 
 def bar_with_multiple_axis(x_data, y_data_1, y_data_2):
@@ -184,12 +181,11 @@ def nested_pie(data_1, data_2):
     plt.rcParams['axes.unicode_minus'] = False  # 坐标轴负号的处理
     plt.axes(aspect='equal')  # 将横、纵坐标轴标准化处理，确保饼图是一个正圆，否则为椭圆
     data_1_labels = ['0~1w', '1w~10w', '10w~100w', '100w~200w',
-                     '200w~500w', '500w~1kw', '>1kw']
-    data_2_labels = ['0~1k', '1k~1w', '1w~10w', '10w~50w', '50w~100w', '>100w']
+                     '200w~500w', '500w~1000w', '>1000w']
+    data_2_labels = ['0~1k', '1k~1w', '1w~10w', '10w~50w', '>50w']
     explode = [0, 0, 0, 0, 0, 0, 0.1]
 
-    # outer_colors = list(np.arange(3) * 7)
-    # inner_colors = list(np.arange(3) * 6)
+    color = []
     plt.pie(
         x=data_1,  # 绘图数据
         explode=explode,  # 指定饼图某些部分的突出显示，即呈现爆炸式
@@ -200,20 +196,22 @@ def nested_pie(data_1, data_2):
         radius=1.2,  # 设置饼图的半径
         counterclock=False,  # 是否逆时针，这里设置为顺时针方向
         wedgeprops={'linewidth': 1.5, 'edgecolor': 'green', 'width': 0.4},  # 设置饼图内外边界的属性值
-        textprops={'fontsize': 10, 'color': 'royalblue'},  # 设置文本标签的属性值
+        textprops={'fontsize': 10, 'color': 'k'},  # 设置文本标签的属性值
     )
     plt.pie(
         x=data_2, labels=data_2_labels, pctdistance=0.5, labeldistance=0.7, radius=0.8,
         counterclock=False, wedgeprops={'linewidth': 0.5, 'edgecolor': 'green', 'width': 0.3},
-        textprops={'fontsize': 6, 'color': 'orange'}, autopct='%0.3f%%'
+        textprops={'fontsize': 10, 'color': 'r'}, autopct='%0.3f%%'
     )
     plt.title('viewing and danmu')
     return plt
 
 
-if __name__ == '__main__':
-    # 获取数据
-    src_file = open('1000-Data2.csv', 'r', encoding='utf-8-sig')
+def get_info(path, encoding):
+    if encoding == '':
+        src_file = open(path, 'r')
+    else:
+        src_file = open(path, 'r', encoding=encoding)
     src_list = src_file.readline()
     src_list = src_file.readline()
     while src_list != '':
@@ -221,29 +219,39 @@ if __name__ == '__main__':
         data_analyze(info_list)
         src_list = src_file.readline()
 
-    print("coins:")
-    print(coins)
-    print("thumbs:")
-    print(thumbs)
+
+if __name__ == '__main__':
+    # 获取数据
+    get_info('data/1000-Data.csv', encoding='gb18030')
+    get_info('data/1000-Data2.csv', encoding='utf-8-sig')
+    get_info('data/1000-Data3.csv', encoding='')
+    get_info('data/1000-Data4.csv', encoding='')
+    get_info('data/1000-Data8.csv', encoding='gb18030')
+
+    print(str(sum))
+    # print("coins:")
+    # print(coins)
+    # print("thumbs:")
+    # print(thumbs)
     chart = bar_with_multiple_axis(
         ['0~2k', '2k~5k', '5k~1w', '1w~2w', '2w~5w', '5w~10w', '10w~50w', '>50w'],
         list(coins),
         list(thumbs)
     )
-    chart.render('bar2-1.html')  # 画点赞-投币双Y图
+    chart.render('pictures/coin-thumb1+2+3+4+8.html')  # 画点赞-投币双Y图
 
-    print('viewing:')
+    # print('viewing:')
+    # print(viewing)
     viewing = viewing / sum
-    print(viewing)
-    print('danMu:')
+    # print('danMu:')
+    # print(danMu)
     danMu = danMu / sum
-    print(danMu)
     fig = nested_pie(list(viewing), list(danMu))
-    fig.savefig('viewing_danmu2-1.png')
+    fig.savefig('pictures/viewing_danmu1+2+3+4+8.png')
     fig.show()  # 播放量-弹幕嵌套饼图
 
-    print('scores:')
-    print(scores)
+    # print('scores:')
+    # print(scores)
     chart2 = bar_with_linear_gradient_color(
         ['<5.0', '5.0~6.0', '6.0~7.0', '7.0~8.0', '8.0~9.0', '9.0~9.5', '9.5~9.8', '>=9.8'], list(scores))
-    chart2.render('bar2-2.html')  # 评分条形图
+    chart2.render('pictures/score1+2+3+4+8.html')  # 评分条形图

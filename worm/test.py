@@ -1,4 +1,6 @@
 # coding=utf-8
+import sys
+
 import numpy as np
 import pandas as pd
 import pandas.errors
@@ -6,27 +8,6 @@ from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import axes3d
 from numpy import arange, meshgrid, sqrt, sin
 
-# ax = plt.axes(projection='3d')
-#
-# x = arange(-5, 5, 0.1)
-# y = arange(-5, 5, 0.1)
-# x, y = meshgrid(x, y)
-# R = sqrt(x ** 2 + y ** 2)
-# z = sin(R)
-#
-# # ax.plot_surface(x, y, z)
-# # ax.set_xlabel('X Axes')
-# # ax.set_ylabel('Y Axes')
-# # ax.set_zlabel('Z Axes')
-# #
-# # plt.show()
-#
-# print('x:')
-# print(type(x))
-# print('y:')
-# print(type(y))
-# print('z:')
-# print(type(z))
 
 # from openpyxl import load_workbook
 #
@@ -55,12 +36,16 @@ from numpy import arange, meshgrid, sqrt, sin
 #         src_list = next(reader)
 #     except StopIteration:
 #         break
-for i in ('gbk', 'utf-8', 'gb18030', 'ansi'):
-    try:
-        data = pd.read_csv('1000-Data2.csv', encoding=i)
-        print(i + 'decode success')
-    except UnicodeDecodeError:
-        print(i + 'decode fail')
+# for i in ('gbk', 'utf-8', 'gb18030', 'ansi'):
+#     try:
+#         data = pd.read_csv('1000-Data2.csv', encoding=i)
+#         print(i + 'decode success')
+#     except UnicodeDecodeError:
+#         print(i + 'decode fail')
 
 # src_datas = pd.read_csv('1000-Data2.csv', encoding='gb18030', error_bad_lines=False)
 # print(src_datas)
+
+src_datas = pd.read_csv('data/1000-Data8.csv', encoding='gb18030')
+tag_col = src_datas['标签']
+print(tag_col)

@@ -197,48 +197,62 @@ if __name__ == '__main__':
     content = read.split('\n')
 
     # 待写文件
-    file_edit = open('1000-Data2.csv', 'a+', encoding='UTF-8')
-    file_edit.write(
-        '电影名字,播放数量,弹幕数量,追剧数量,投币数量,点赞数量,标签,分数,打分人数,影片时长(分钟),长评数量,短评数量,简介,\n')
+    file_edit = open('data/1000-Data4.csv', 'a+', encoding='UTF-8')
+    # file_edit.write(
+    #     '电影名字,播放数量,弹幕数量,追剧数量,投币数量,点赞数量,标签,分数,打分人数,影片时长(分钟),长评数量,短评数量,简介,\n')
 
+    nums = 1;
     print(
         "[电影名字,播放数量,弹幕数量,追剧数量,投币数量,点赞数量,标签,分数,打分人数,影片时长(分钟),长评数量,短评数量,简介]")
     length = len(content)  # 一共12158部
     print(length)
-    for index in range(1600, 1610):  # range(x,y)即选取txt文件内x~y-1行的电影进行爬取
-        if len(content[index]) != 0:  # 判断该行是否为空
+    for index in range(9000, 10000):  # range(x,y)即选取txt文件内x~y-1行的电影进行爬取
+        if (len(content[index]) != 0):  # 判断该行是否为空
 
             name_url = content[index].split('\t')  # 取出该行数据
 
-            driver.get(name_url[1])  # 进入网页
-            time.sleep(1)
-            _text = driver.find_element(By.XPATH, '//*[@id="media_module"]/div/div[1]').text  # 提取信息
-            _coin = driver.find_element(By.XPATH, '//*[@class="coin-info"]').text  # 投币数
-            _like = driver.find_element(By.XPATH, '//*[@class="like-info"]').text  # 点赞数
-            # _comm = driver.find_element(By.XPATH, '//*[@id="comment_module"]/div[1]/span[1]').text
+            try:
+                driver.get(name_url[1])  # 进入网页
+            except selenium.common.exceptions.InvalidArgumentException:
+                continue
+            time.sleep(0.3)
+            try:
+                _text = driver.find_element(By.XPATH, '//*[@id="media_module"]/div/div[1]').text  # 提取信息
+            except Exception as e:
+                print(e.args)
+                continue
+            print(index, ' ', nums, end=' ')
+            nums += 1
+            try:
+                _coin = driver.find_element(By.XPATH, '//*[@class="coin-info"]').text  # 投币数
+                _like = driver.find_element(By.XPATH, '//*[@class="like-info"]').text  # 点赞数
+                # _comm = driver.find_element(By.XPATH, '//*[@id="comment_module"]/div[1]/span[1]').text
 
-            text = http_get(name_url[1])  # 详情页面地址获取
-            html = etree.HTML(text)
-            detail_page_url = html.xpath('//*[@id="media_module"]/a/@href')[0]
-            # try:
-            #     detail_page_url = html.xpath('//*[@id="media_module"]/a/@href')[0]
-            # except Exception as e:
-            #     print(e.args)
-            #     print(name_url)
-            #     try:
-            #         detail_page_url = html.xpath('//*[@id="media_module"]/div/a').text
-            #         print(detail_page_url)
-            #     except Exception as e:
-            #         continue
-            detail_page_url = 'https:' + detail_page_url
-            driver.get(detail_page_url)  # 进入详情页面
-            # 获取标签
-            _tags = driver.find_element(By.XPATH, '//*[@id="app"]/div[1]/div[2]/div/div[2]/div[1]/span[2]').text
-            # 获取日期
-            _date = driver.find_element(By.XPATH, '//*[@id="app"]/div[1]/div[2]/div/div[2]/div[3]/span[1]').text
-            # 获取时长
-            _time = driver.find_element(By.XPATH, '//*[@id="app"]/div[1]/div[2]/div/div[2]/div[3]/span[2]').text
-            # 获取评分及评分人数
+                text = http_get(name_url[1])  # 详情页面地址获取
+                html = etree.HTML(text)
+                detail_page_url = html.xpath('//*[@id="media_module"]/a/@href')[0]
+                # try:
+                #     detail_page_url = html.xpath('//*[@id="media_module"]/a/@href')[0]
+                # except Exception as e:
+                #     print(e.args)
+                #     print(name_url)
+                #     try:
+                #         detail_page_url = html.xpath('//*[@id="media_module"]/div/a').text
+                #         print(detail_page_url)
+                #     except Exception as e:
+                #         continue
+                detail_page_url = 'https:' + detail_page_url
+                driver.get(detail_page_url)  # 进入详情页面
+                # 获取标签
+                _tags = driver.find_element(By.XPATH, '//*[@id="app"]/div[1]/div[2]/div/div[2]/div[1]/span[2]').text
+                # 获取日期
+                _date = driver.find_element(By.XPATH, '//*[@id="app"]/div[1]/div[2]/div/div[2]/div[3]/span[1]').text
+                # 获取时长
+                _time = driver.find_element(By.XPATH, '//*[@id="app"]/div[1]/div[2]/div/div[2]/div[3]/span[2]').text
+                # 获取评分及评分人数
+            except Exception as e:
+                print("Wrong")
+                continue
             try:
                 _score = driver.find_element(By.XPATH,
                                              '//*[@id="app"]/div[1]/div[2]/div/div[2]/div[2]/div[2]/div/div[1]').text
