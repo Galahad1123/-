@@ -197,17 +197,17 @@ if __name__ == '__main__':
     content = read.split('\n')
 
     # 待写文件
-    file_edit = open('data/1000-Data4.csv', 'a+', encoding='UTF-8')
+    file_edit = open('data/1000-Data10.csv', 'a+', encoding='UTF-8')
     # file_edit.write(
     #     '电影名字,播放数量,弹幕数量,追剧数量,投币数量,点赞数量,标签,分数,打分人数,影片时长(分钟),长评数量,短评数量,简介,\n')
 
-    nums = 1;
+    nums = 1
     print(
         "[电影名字,播放数量,弹幕数量,追剧数量,投币数量,点赞数量,标签,分数,打分人数,影片时长(分钟),长评数量,短评数量,简介]")
     length = len(content)  # 一共12158部
     print(length)
-    for index in range(9000, 10000):  # range(x,y)即选取txt文件内x~y-1行的电影进行爬取
-        if (len(content[index]) != 0):  # 判断该行是否为空
+    for index in range(12158, 12159):  # range(x,y)即选取txt文件内x~y-1行的电影进行爬取
+        if len(content[index]) != 0:  # 判断该行是否为空
 
             name_url = content[index].split('\t')  # 取出该行数据
 
@@ -215,7 +215,7 @@ if __name__ == '__main__':
                 driver.get(name_url[1])  # 进入网页
             except selenium.common.exceptions.InvalidArgumentException:
                 continue
-            time.sleep(0.3)
+            time.sleep(0.4)
             try:
                 _text = driver.find_element(By.XPATH, '//*[@id="media_module"]/div/div[1]').text  # 提取信息
             except Exception as e:

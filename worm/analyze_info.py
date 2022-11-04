@@ -1,12 +1,9 @@
 from pyecharts.charts import *
 from pyecharts import options as opts
 import numpy as np
-from pyecharts.globals import CurrentConfig, NotebookType
 from pyecharts.commons.utils import JsCode
 import matplotlib.pyplot as plt
 
-CurrentConfig.NOTEBOOK_TYPE = NotebookType.JUPYTER_LAB
-CurrentConfig.ONLINE_HOST
 color_js = """
             new echarts.graphic.LinearGradient(
                                 0, 
@@ -17,7 +14,16 @@ color_js = """
                                  {offset: 1, color: '#FF6347'}], 
                                 false)
            """
-
+color_js_2 = """
+            new echarts.graphic.LinearGradient(
+                                0, 
+                                1, 
+                                0, 
+                                0,
+                                [{offset: 0, color: '#8888FF'}, 
+                                 {offset: 1, color: '#00cccc'}], 
+                                false)
+           """
 # 用一维数组存储数据
 coins = np.zeros(8)  # 总投币数 0~2000，2000~5000，5000~10000，10000~20000，20000~50000，50000~100000，100000~500000，>500000
 thumbs = np.zeros(8)  # 总点赞数 0~2000，2000~5000，5000~10000，10000~20000，20000~50000，50000~100000，100000~500000，>500000
@@ -164,19 +170,25 @@ def bar_with_multiple_axis(x_data, y_data_1, y_data_2):
     return bar
 
 
-def bar_with_linear_gradient_color(x_data, y_data):
+def bar_with_linear_gradient_color(x_data, y_data, y_title, jscode=color_js):
+    """
+    画直方图
+    """
     bar = Bar(init_opts=opts.InitOpts(theme='light',
                                       width='1000px',
                                       height='600px'))
     bar.add_xaxis(x_data)
-    bar.add_yaxis('score', y_data,
+    bar.add_yaxis(y_title, y_data,
                   # 使用JsCode执行渐变色代码
-                  itemstyle_opts=opts.ItemStyleOpts(color=JsCode(color_js)))
+                  itemstyle_opts=opts.ItemStyleOpts(color=JsCode(jscode)))
 
     return bar
 
 
 def nested_pie(data_1, data_2):
+    """
+    画嵌套饼图
+    """
     plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 显示中文标签,处理中文乱码问题
     plt.rcParams['axes.unicode_minus'] = False  # 坐标轴负号的处理
     plt.axes(aspect='equal')  # 将横、纵坐标轴标准化处理，确保饼图是一个正圆，否则为椭圆
@@ -208,6 +220,9 @@ def nested_pie(data_1, data_2):
 
 
 def get_info(path, encoding):
+    """
+    解析源文件
+    """
     if encoding == '':
         src_file = open(path, 'r')
     else:
@@ -227,31 +242,37 @@ if __name__ == '__main__':
     get_info('data/1000-Data3.csv', encoding='')
     get_info('data/1000-Data4.csv', encoding='')
     get_info('data/1000-Data8.csv', encoding='gb18030')
+    get_info('data/1000-Data9.csv', encoding='utf-8-sig')
+    get_info('data/1000-Data10.csv', encoding='utf-8-sig')
+    get_info('data/6000~9000-Data.csv', encoding='utf-8-sig')
 
-    print(str(sum))
-    # print("coins:")
-    # print(coins)
-    # print("thumbs:")
-    # print(thumbs)
+    print(str(sum))  # 成功解析的电影数
+
     chart = bar_with_multiple_axis(
         ['0~2k', '2k~5k', '5k~1w', '1w~2w', '2w~5w', '5w~10w', '10w~50w', '>50w'],
         list(coins),
         list(thumbs)
     )
-    chart.render('pictures/coin-thumb1+2+3+4+8.html')  # 画点赞-投币双Y图
+    chart.render('pictures/coin-thumb.html')  # 画点赞-投币双Y图
 
-    # print('viewing:')
-    # print(viewing)
+    chart2 = bar_with_linear_gradient_color(
+        ['0~1w', '1w~10w', '10w~100w', '100w~200w', '200w~500w', '500w~1000w', '>1000w'],
+        list(viewing),
+        'viewing',
+        jscode=color_js_2
+    )
+    chart2.render('pictures/viewing.html')  # 播放量条形图
+
     viewing = viewing / sum
-    # print('danMu:')
-    # print(danMu)
     danMu = danMu / sum
+
     fig = nested_pie(list(viewing), list(danMu))
-    fig.savefig('pictures/viewing_danmu1+2+3+4+8.png')
+    fig.savefig('pictures/viewing_danmu.png')
     fig.show()  # 播放量-弹幕嵌套饼图
 
-    # print('scores:')
-    # print(scores)
     chart2 = bar_with_linear_gradient_color(
-        ['<5.0', '5.0~6.0', '6.0~7.0', '7.0~8.0', '8.0~9.0', '9.0~9.5', '9.5~9.8', '>=9.8'], list(scores))
-    chart2.render('pictures/score1+2+3+4+8.html')  # 评分条形图
+        ['<5.0', '5.0~6.0', '6.0~7.0', '7.0~8.0', '8.0~9.0', '9.0~9.5', '9.5~9.8', '>=9.8'],
+        list(scores),
+        'score'
+    )
+    chart2.render('pictures/score.html')  # 评分条形图

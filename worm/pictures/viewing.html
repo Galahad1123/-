@@ -7,11 +7,11 @@
 
 </head>
 <body>
-    <div id="1378e865b3924603adf370435495dc42" class="chart-container" style="width:1000px; height:600px;"></div>
+    <div id="5627070b4cbc4e71b9dca30110cb3c48" class="chart-container" style="width:1000px; height:600px;"></div>
     <script>
-        var chart_1378e865b3924603adf370435495dc42 = echarts.init(
-            document.getElementById('1378e865b3924603adf370435495dc42'), 'light', {renderer: 'canvas'});
-        var option_1378e865b3924603adf370435495dc42 = {
+        var chart_5627070b4cbc4e71b9dca30110cb3c48 = echarts.init(
+            document.getElementById('5627070b4cbc4e71b9dca30110cb3c48'), 'light', {renderer: 'canvas'});
+        var option_5627070b4cbc4e71b9dca30110cb3c48 = {
     "animation": true,
     "animationThreshold": 2000,
     "animationDuration": 1000,
@@ -23,17 +23,16 @@
     "series": [
         {
             "type": "bar",
-            "name": "score",
+            "name": "viewing",
             "legendHoverLink": true,
             "data": [
-                45.0,
-                32.0,
-                45.0,
-                72.0,
-                195.0,
-                294.0,
-                432.0,
-                292.0
+                700.0,
+                2911.0,
+                3382.0,
+                804.0,
+                892.0,
+                474.0,
+                922.0
             ],
             "showBackground": false,
             "barMinHeight": 0,
@@ -52,17 +51,17 @@
                 "margin": 8
             },
             "itemStyle": {
-                "color":             new echarts.graphic.LinearGradient(                                0,                                 1,                                 0,                                 0,                                [{offset: 0, color: '#008B8B'},                                  {offset: 1, color: '#FF6347'}],                                 false)           
+                "color":             new echarts.graphic.LinearGradient(                                0,                                 1,                                 0,                                 0,                                [{offset: 0, color: '#8888FF'},                                  {offset: 1, color: '#00cccc'}],                                 false)           
             }
         }
     ],
     "legend": [
         {
             "data": [
-                "score"
+                "viewing"
             ],
             "selected": {
-                "score": true
+                "viewing": true
             }
         }
     ],
@@ -105,14 +104,13 @@
                 }
             },
             "data": [
-                "<5.0",
-                "5.0~6.0",
-                "6.0~7.0",
-                "7.0~8.0",
-                "8.0~9.0",
-                "9.0~9.5",
-                "9.5~9.8",
-                ">=9.8"
+                "0~1w",
+                "1w~10w",
+                "10w~100w",
+                "100w~200w",
+                "200w~500w",
+                "500w~1000w",
+                ">1000w"
             ]
         }
     ],
@@ -140,7 +138,7 @@
         }
     ]
 };
-        chart_1378e865b3924603adf370435495dc42.setOption(option_1378e865b3924603adf370435495dc42);
+        chart_5627070b4cbc4e71b9dca30110cb3c48.setOption(option_5627070b4cbc4e71b9dca30110cb3c48);
     </script>
 </body>
 </html>
